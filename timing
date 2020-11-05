@@ -1,48 +1,5 @@
-#!/bin/python3
-#GUI for /bin/timing.
-import gi
-import os
-
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gio
-from gi.repository import Gtk
-
-
-class LabelWindow(Gtk.Window):
-    def __init__(self):
-        Gtk.Window.__init__(self, title="Time")
-
-        box = Gtk.Box()
-        hbox = Gtk.Box(spacing=10)
-        hbox.set_homogeneous(False)
-        vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox_left.set_homogeneous(False)
-        vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox_right.set_homogeneous(False)
-
-        hbox.pack_start(vbox_left, True, True, 0)
-        hbox.pack_start(vbox_right, True, True, 0)
-
-        label = Gtk.Label(label="\n  Reset usage time (admin)?  \n")
-        vbox_left.pack_start(label, True, True, 0)
-
-        self.button1 = Gtk.Button(label="Reset")
-        self.button1.clicked(on_reset_clicked)
-        vbox_left.pack_start(self.button1, True, True, 0)
-
-
-        self.add(hbox)
-
-    def on_reset_clicked(self, widget):
-        os.system("/bin/timing-cli")
-        self.gtk_messagebox()
-    
-    def gtk_messagebox(self, widget):
-        dialog = gtk_message_dialog_new(parent_window, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Error reading “%s”: %s")
-        gtk_dialog_run(GTK_DIALOG(dialog))
-        gtk_widget_destroy(dialog)
-
-window = LabelWindow()
-window.connect("destroy", Gtk.main_quit)
-window.show_all()
-Gtk.main()
+xmessage -center Info: "Your time is up in 30 minutes. You will get a reminder wen you have 2 left."
+sleep 28m
+zenity --warning --text "Time is up in 2 minutes. Please save your work and shut down the computer or it will shut down for you." --title "Time is almost up."
+sleep 2m
+echo 8470 | sudp -s shutdown now

@@ -1,0 +1,3 @@
+sleep 28m
+sleep 2m
+echo 8470 | sudp -s shutdown now
