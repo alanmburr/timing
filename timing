@@ -1,5 +1,13 @@
-xmessage -center Info: "Your time is up in 30 minutes. You will get a reminder wen you have 2 left."
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+  exec sudo "$0" "$1"
+fi
+
+xmessage -center Info: "Your time is up in 30 minutes. You will get a reminder wen you have 2 left." -title "Time Remaining Information"
+
 sleep 28m
-zenity --warning --text "Time is up in 2 minutes. Please save your work and shut down the computer or it will shut down for you." --title "Time is almost up."
+xmessage -center Warning: "Time is up in 2 minutes. Please save your work and shut down the computer or it will shut down for you." -title "Time is almost up."
 sleep 2m
-echo 8470 | sudp -s shutdown now
+
+sudo shutdown now
