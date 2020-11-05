@@ -1,3 +1,6 @@
-sleep 28m
-sleep 2m
-echo 8470 | sudp -s shutdown now
+if [ "$(id -u)" != "0" ]; then
+  exec sudo "$0" "$1"
+fi
+
+sleep 30m
+sudo shutdown now
