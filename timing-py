@@ -1,56 +1,46 @@
+#!/usr/bin/python3
+
 import gi
 import os
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
+hbox = Gtk.Box(spacing=10)
+hbox.set_homogeneous(False)
+vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+vbox_left.set_homogeneous(False)
+vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+vbox_right.set_homogeneous(False)
+hbox.pack_start(vbox_left, True, True, 0)
+hbox.pack_start(vbox_right, True, True, 0)
 
-class LabelWindow(Gtk.Window):
+class TimingWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Timing")
-
-        hbox = Gtk.Box(spacing=10)
-        hbox.set_homogeneous(False)
-        vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox_left.set_homogeneous(False)
-        vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox_right.set_homogeneous(False)
-
-        hbox.pack_start(vbox_left, True, True, 0)
-        hbox.pack_start(vbox_right, True, True, 0)
+        Gtk.Window.set_default_icon_name("gnome-clocks")
 
         label = Gtk.Label(label=" Reset time?")
         vbox_left.pack_start(label, True, True, 0)
 
-        button = Gtk.Button.new_with_mnemonic("_Open")
-        button.connect("clicked", self.clicked)
-        hbox.pack_start(button, True, True, 0)
+        resetbutton = Gtk.Button.new_with_mnemonic("_Reset")
+        resetbutton.connect("clicked", self.clicked)
+        hbox.pack_start(resetbutton, True, True, 0)
+
+        cancelbutton = Gtk.Button.new_with_mnemonic("_Cancel")
+        cancelbutton.connect("clicked", self.cancel)
+        hbox.pack_start(cancelbutton, True, True, 0)
 
         self.add(hbox)
-    def clicked(self, button):
+
+    def clicked(self, resetbutton):
         os.system("/bin/timing-cli")
-    
-class ConfirmedWindow(Gtk.Window):
-    def __init_the_seond__(self):
-        Gtk.Window.__init_the_second__(self, title="Timing")
-        hbox = Gtk.Box(spacing=10)
-        hbox.set_homogeneous(False)
-        vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox_left.set_homogeneous(False)
-        vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox_right.set_homogeneous(False)
-        hbox.pack_start(vbox_left, True, True, 0)
-        hbox.pack_start(vbox_right, True, True, 0)
-        label = Gtk.Label(label=" Reset time?")
-        vbox_left.pack_start(label, True, True, 0)
-        button = Gtk.Button(label="Reset", onclick=self.reset_confirmed)
-        label.set_mnemonic_widget(button)
-        vbox_right.pack_start(button, True, True, 0)
-        self.add(hbox)
-    
+        os.system("/usr/bin/zenity --info --text 'Time Reset' --title 'Timing'")
+        Gtk.main_quit()
+    def cancel(self, cancelbutton):
+        Gtk.main_quit()
 
-
-window = LabelWindow()
+window = TimingWindow()
 window.connect("destroy", Gtk.main_quit)
 window.show_all()
 Gtk.main()
